@@ -17,12 +17,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/kelseyhightower/envconfig"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"strings"
-
-	"github.com/kelseyhightower/envconfig"
+	"github.com/coreos/go-oidc"
 )
 
 const (
