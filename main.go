@@ -22,7 +22,6 @@ import (
 	"net/http/httputil"
 	"strings"
 
-	"github.com/coreos/go-oidc"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -118,7 +117,13 @@ func main() {
 	)
 
 	director := func(req *http.Request) {
-		req.Header.Add("X-Forwarded-Host", req.Host)
+		if val, ok := req.Header["X-Forwarded-Host"]; ok {
+			if val[0] != req.Host {
+				log.Fatal("X-Forwarded-Host is there but different than request host")
+			}
+		} else {
+			req.Header.Add("X-Forwarded-Host", req.Host)
+		}
 		req.Header.Add("X-Origin-Host", "cloudflare-access-proxy")
 		// TODO: should we trust on the Schema of the original request?
 		req.URL.Scheme = "http"
